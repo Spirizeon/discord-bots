@@ -3,22 +3,26 @@ from subprocess import Popen, PIPE, run, check_output
 from discord.ext import commands
 from dotenv import load_dotenv
 from asyncio import sleep
-# workaround since torrentsearch.py imports it as well... T_T
 from pyperclip import copy
-
+import discord 
+from discord import app_commands
 
 # .env variables
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv('BOT_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = int(os.getenv('DISCORD_GUILD_ID'))
+SERVER_DIR = os.getenv('SERVER_DIR')
 
 # server directory to run commands from
-os.chdir('D:/user/arquivos (downloads)/down/arquivos/server/files')
+# os.chdir(SERVER_DIR)
 server_running = False
 
+
+intents = discord.Intents.default()
+intents.message_content = True
 # main bot class object
-bot = commands.Bot(command_prefix='=', help_command=None)
+bot = commands.Bot(command_prefix='=', help_command=None, intents=intents)
 
 
 @bot.event
@@ -27,8 +31,13 @@ async def on_ready():
     for guild in bot.guilds:
         print(f'{guild.name} | {guild.id}')
 
+    try:
+        synced = await bot.tree.sync()
+    except Exception as e:
+        print(e)
 
-@bot.command(name='abrir')
+
+# @bot.tree.command(name='abrir')
 async def open_server(ctx, *args: str):
     # main server on off variable
     global server_running
@@ -84,7 +93,7 @@ async def open_server(ctx, *args: str):
                 await ctx.send('fechado')
 
 
-@bot.command(name='aberto?')
+# @bot.tree.command(name='aberto?')
 async def is_server_open(ctx):
     if server_running:
         await ctx.send('sim')
@@ -92,7 +101,7 @@ async def is_server_open(ctx):
         await ctx.send('nao')
 
 
-@bot.command(name='fechar')
+# @bot.tree.command(name='fechar')
 async def close_server(ctx):
     if server_running:
         close_msg = await ctx.send('fechando . . .')
@@ -106,14 +115,14 @@ async def close_server(ctx):
 
 
 # DOES NOT WORK YET
-@bot.command(name='cmd')
+# @bot.tree.command(name='cmd')
 async def command_server(ctx, *command: str):
     pass
     # cmd.stdin.write(''.join(command).encode())
     await ctx.send(run(''.join(command), shell=True))
 
 
-@bot.command(name='logout')
+# @bot.tree.command(name='logout')
 async def logout(ctx):
     await ctx.send('tchau')
     global server_running
@@ -121,17 +130,17 @@ async def logout(ctx):
     await bot.logout()
 
 
-@bot.command(name='help')
+# @bot.tree.command(name='help')
 async def help(ctx):
     await ctx.send('fodase')
 
 
-@bot.command(name='ping')
+@bot.tree.command(name='ping')
 async def ping(ctx):
-    await ctx.send(f'POING ({round(bot.latency * 1000, 4)}ms)')
+    await ctx.response.send_message(f'POING ({round(bot.latency * 1000, 4)}ms)', ephemeral=True)
 
 
-@bot.event
+# @bot.event
 async def on_error(event, *args, **kwargs):
     with open('error.log', 'w') as f:
         if event == 'on_message':
@@ -141,7 +150,7 @@ async def on_error(event, *args, **kwargs):
             raise
 
 
-@bot.command(name='search')
+# @bot.tree.command(name='search')
 async def trr_search(ctx, *args):
     search_args = ' '.join(args)
     search = Popen(fr'trr dscd {search_args}', shell=True, stdout=PIPE)
@@ -153,6 +162,6 @@ async def trr_search(ctx, *args):
 
     await ctx.send(output)
 
-
+print('token:',TOKEN)
 bot.run(TOKEN)
 

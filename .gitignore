@@ -1,3 +1,5 @@
-discord-py-venv
+venv
+**/venv
 .env
 **/.env
+melanculator-selfbot/saved_data.json
