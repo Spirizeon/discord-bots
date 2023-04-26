@@ -4,6 +4,11 @@ This repo is a collection of small Discord bots I have done. Here they are, in o
 
 A selfbot born out of an inside joke.
 Annoy the hell out of your friends by reacting to every single message with emojis. 
+## Running
+Set the environment variables:
+```ini
+SELF_TOKEN=<token>
+```
 ## Commands
 *param -> optional
 - `emoji <emoji*s>` - what emoji(s) to react, space separated 
