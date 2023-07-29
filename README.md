@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ```
 
 ### Docker installation
-Build and run the docker container (once built, you can directly use `docker run -it melanculator-bot`)
+Build and run the docker container (once built, you can directly use `docker run -it melanculator-bot`
 ```
 docker build . -t melanculator-bot && docker run -it melanculator-bot
 ```
