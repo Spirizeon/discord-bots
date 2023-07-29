@@ -9,6 +9,17 @@ Set the environment variables:
 ```ini
 SELF_TOKEN=<token>
 ```
+### Python installation
+Install the dependencies
+```
+pip install -r requirements.txt
+```
+
+### Docker installation
+Build and run the docker container (once built, you can directly use `docker run -it melanculator-bot`)
+```
+docker build . -t melanculator-bot && docker run -it melanculator-bot
+```
 ## Commands
 *param -> optional
 - `emoji <emoji*s>` - what emoji(s) to react, space separated 
